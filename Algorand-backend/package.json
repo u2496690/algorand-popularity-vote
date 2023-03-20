@@ -1,0 +1,19 @@
+{
+  "name": "algorandsongvotebackendtemplate",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "The final template for the backend for Song Vote on Algorand",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Antony Silvetti-Schmitt",
+  "license": "MIT",
+  "dependencies": {
+    "algosdk": "^1.13.1",
+    "dotenv": "^16.0.0",
+    "pip": "^0.0.1",
+    "python3": "^0.0.1",
+    "xhr2": "^0.2.1"
+  }
+}

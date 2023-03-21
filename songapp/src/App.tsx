@@ -1,10 +1,5 @@
 import { useState, useEffect } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import WalletConnect from "@walletconnect/client";
-import QRCodeModal from "algorand-walletconnect-qrcode-modal";
 import algosdk from "algosdk";
-import { formatJsonRpcRequest } from "@json-rpc-tools/utils";
 import { Buffer } from "buffer";
 import { PeraWalletConnect } from "@perawallet/connect";
 
@@ -17,8 +12,6 @@ function App() {
   const [Count1, setCount1] = useState(0);
   const [Count2, setCount2] = useState(0);
   const [walletbalance, setwalletbalance] = useState<number>(0);
-  const [connector, setConnector] = useState<WalletConnect>();
-  const [connected, setConnected] = useState(false);
 
   const peraWallet = new PeraWalletConnect({
     // Default chainId is "4160"
@@ -51,7 +44,7 @@ function App() {
         // You MUST handle the reject because once the user closes the modal, peraWallet.connect() promise will be rejected.
         // For the async/await syntax you MUST use try/catch
         if (error?.data?.type !== "CONNECT_MODAL_CLOSED") {
-          // log the necessary errors
+          console.log(error);
         }
       });
   };
@@ -61,96 +54,8 @@ function App() {
     setCurrentAccount(null);
   };
 
-  const checkIfWalletIsConnected = async () => {
-    try {
-      if (!connected) {
-        console.log("No connection");
-        return;
-      } else {
-        console.log("We have connection", connector);
-      }
-      if (connector) {
-        const { accounts } = connector;
-        if (accounts.length !== 0) {
-          const account = accounts[0];
-          console.log("Found an authorized account:", account);
-          setCurrentAccount(account);
-          // await getAllRecs(); IMPORTANT FOR FUNCTIONALITY LATER
-        } else {
-          setCurrentAccount(undefined);
-          console.log("No authorized account found");
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const disconnectWallet = async () => {
-    if (connector) connector.killSession();
-    console.log("Killing session for wallet with address: ", currentAccount);
-    setCurrentAccount(undefined);
-    setConnector(undefined);
-    setConnected(false);
-  };
-
-  const connectWallet = async () => {
-    try {
-      const bridge = "https://bridge.walletconnect.org";
-      const connector = new WalletConnect({ bridge, qrcodeModal: QRCodeModal });
-      setConnector(connector);
-
-      if (!connector.connected) {
-        await connector.createSession();
-        console.log("Creating new connector session");
-      }
-
-      connector.on("connect", (error, payload) => {
-        if (error) {
-          throw error;
-        }
-        // Get provided accounts
-        const { accounts } = payload.params[0];
-        console.log(
-          "connector.on connect: Connected an account with address:",
-          accounts[0]
-        );
-        setConnector(connector);
-        setConnected(true);
-        setCurrentAccount(accounts[0]);
-      });
-
-      connector.on("session_update", (error, payload) => {
-        if (error) {
-          throw error;
-        }
-        // Get updated accounts
-        const { accounts } = payload.params[0];
-        setCurrentAccount(accounts[0]);
-      });
-
-      connector.on("disconnect", (error, payload) => {
-        if (error) {
-          throw error;
-        }
-        setCurrentAccount(undefined);
-        setConnected(false);
-        setConnector(undefined);
-      });
-
-      if (connector.connected) {
-        const { accounts } = connector;
-        const account = accounts[0];
-        setCurrentAccount(account);
-        setConnected(true);
-      }
-    } catch (error) {
-      console.log("something didn't work in creating connector", error);
-    }
-  };
-
   const addC1 = async () => {
-    if (!currentAccount || !connector) {
+    if (!currentAccount) {
       console.log("Please connect wallet");
       return;
     }
@@ -167,25 +72,18 @@ function App() {
     let txId = txn.txID().toString();
 
     // time to sign . . . which we have to do with walletconnect
-    const txns = [txn];
-    const txnsToSign = txns.map((txn) => {
-      const encodedTxn = Buffer.from(
-        algosdk.encodeUnsignedTransaction(txn)
-      ).toString("base64");
-      return {
-        txn: encodedTxn,
-      };
-    });
-    const requestParams = [txnsToSign];
-    const request = formatJsonRpcRequest("algo_signTxn", requestParams);
+    const SignerTransaction = [{ txn }];
 
     setVoteState1("Sign txn in wallet");
-    const result = await connector.sendCustomRequest(request);
+
+    const result = await peraWallet.signTransaction([SignerTransaction]);
+
+    //const result = await connector.sendCustomRequest(request);
     const decodedResult = result.map((element: any) => {
       return element ? new Uint8Array(Buffer.from(element, "base64")) : null;
     });
     setVoteState1("Processing. . .");
-    await algodClient.sendRawTransaction(decodedResult).do();
+    await algodClient.sendRawTransaction(decodedResult as any).do();
     await algosdk.waitForConfirmation(algodClient, txId, 2);
     console.log("Adding to Count1");
     let transactionResponse = await algodClient
@@ -203,7 +101,7 @@ function App() {
   };
 
   const addC2 = async () => {
-    if (!currentAccount || !connector) {
+    if (!currentAccount) {
       console.log("Please connect wallet");
       return;
     }
@@ -221,26 +119,16 @@ function App() {
     let txId = txn.txID().toString();
 
     // time to sign . . . which we have to do with walletconnect
-    const txns = [txn];
-    const txnsToSign = txns.map((txn) => {
-      const encodedTxn = Buffer.from(
-        algosdk.encodeUnsignedTransaction(txn)
-      ).toString("base64");
-      return {
-        txn: encodedTxn,
-      };
-    });
-    const requestParams = [txnsToSign];
-    const request = formatJsonRpcRequest("algo_signTxn", requestParams);
+    const SignerTransaction = [{ txn }];
 
     setVoteState2("Sign txn in wallet");
-    const result = await connector.sendCustomRequest(request);
+    const result = await peraWallet.signTransaction([SignerTransaction]);
     const decodedResult = result.map((element: any) => {
       return element ? new Uint8Array(Buffer.from(element, "base64")) : null;
     });
     // send and await
     setVoteState2("Processing. . .");
-    await algodClient.sendRawTransaction(decodedResult).do();
+    await algodClient.sendRawTransaction(decodedResult as any).do();
     await algosdk.waitForConfirmation(algodClient, txId, 2);
     let transactionResponse = await algodClient
       .pendingTransactionInformation(txId)
@@ -294,10 +182,11 @@ function App() {
         }
       })
       .catch((error) => {
-        console.log(error);
+        if (error?.data?.type !== "CONNECT_MODAL_CLOSED") {
+          console.log(error);
+        }
       });
 
-    checkIfWalletIsConnected();
     getCount();
     setVoteState1("Vote");
     setVoteState2("Vote");
@@ -308,16 +197,15 @@ function App() {
   return (
     <div className="mainContainer">
       <div className="dataContainer">
-        <div className="header">🤪 Yooooo!</div>
+        <div className="header">🎧︎ What kind of music do you like?</div>
         <div className="bio">
-          Antony here, I hope you're enjoying the tutorial. I'm trying to settle
-          a debate with friends. Vote for the better music genre. Ensure your
-          wallet is set to the testnet.
+          Vote for the better music genre. Ensure your wallet is set to the{" "}
+          <b>testnet</b>.
         </div>
         <div className="bio">Rules: Unlimited voting, get to clicking!</div>
 
         {!currentAccount && (
-          <button className="walletButton" onClick={connectWallet}>
+          <button className="walletButton" onClick={handleConnectWalletClick}>
             Connect Wallet
           </button>
         )}
@@ -342,32 +230,26 @@ function App() {
             {walletbalance > 0.01 && (
               <>
                 <div className="songs-container">
-                  <div className="row align-items-center">
-                    <div className="col">
-                      <div className="song-card">
-                        <div className="title">EDM</div>
-                        <div className="count">{Count1}</div>
-                        <button className="mathButton" onClick={addC1}>
-                          {voteState1}
-                        </button>
-                      </div>
-                    </div>
-                    <div className="col align-itmes-center">
-                      <div className="song-card">
-                        <div className="title">Country</div>
-                        <div className="count">{Count2}</div>
-                        <button className="mathButton" onClick={addC2}>
-                          {voteState2}
-                        </button>
-                      </div>
-                    </div>
+                  <div className="song-card">
+                    <div className="title">EDM</div>
+                    <div className="count">{Count1}</div>
+                    <button className="mathButton" onClick={addC1}>
+                      {voteState1}
+                    </button>
+                  </div>
+                  <div className="song-card">
+                    <div className="title">Pop</div>
+                    <div className="count">{Count2}</div>
+                    <button className="mathButton" onClick={addC2}>
+                      {voteState2}
+                    </button>
                   </div>
                 </div>
               </>
             )}
             <button
               className="disconnectwalletButton"
-              onClick={disconnectWallet}
+              onClick={handleDisconnectWalletClick}
             >
               Disconnect Wallet
             </button>

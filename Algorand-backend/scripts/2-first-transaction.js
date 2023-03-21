@@ -2,16 +2,12 @@ import dotenv from "dotenv";
 import algosdk from "algosdk";
 dotenv.config();
 let myaccount = algosdk.mnemonicToSecretKey(
-  "into dove immense rich melt isolate amount replace outdoor act ship alert sight stand abstract arrest circle ridge impose insane remind camera camera absorb fall"
+  "marble bargain devote struggle black rain ticket meadow couple until soup catalog jar afraid helmet scare legal cinnamon profit craft proof tuna elegant absorb insect"
 );
 
-const baseServer = "https://testnet-algorand.api.purestake.io/ps2";
-const port = "";
-const token = {
-  "X-API-Key": "QSiMVqlcHn1uMl22I9MXK3bKrPlQLRD64A1Ux9hZ",
-};
+const baseServer = "https://testnet-api.algonode.cloud";
 
-const algodClient = new algosdk.Algodv2(token, baseServer, port);
+const algodClient = new algosdk.Algodv2("", baseServer, "");
 // This variable is our client. It is the link between our code and the blockchain
 
 (async () => {
@@ -20,7 +16,7 @@ const algodClient = new algosdk.Algodv2(token, baseServer, port);
 
     // reciever will be some random address.
     const receiver =
-      "HZ57J3K46JIJXILONBBZOHX6BKPXEM2VVXNRFSUED6DKFD5ZD24PMJ3MVA";
+      "GZEHJUVOG7XDQRAQ5V6TS34ZESYYLUJR54SS5PGCWX6HQEFRIX2M6VUZQQ";
     const enc = new TextEncoder();
     const note = enc.encode("My first transaction on Algo!");
     let amount = 100000; // equals .1 ALGO

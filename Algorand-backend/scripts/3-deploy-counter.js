@@ -3,15 +3,13 @@ import algosdk from "algosdk";
 import { open, readFile } from "node:fs/promises";
 dotenv.config();
 
-const baseServer = "https://testnet-algorand.api.purestake.io/ps2";
-const port = "";
-const token = {
-  "X-API-Key": process.env.API_KEY,
-};
+const baseServer = "https://testnet-api.algonode.cloud";
 
-const algodClient = new algosdk.Algodv2(token, baseServer, port);
+const algodClient = new algosdk.Algodv2("", baseServer, "");
 
-let myaccount = algosdk.mnemonicToSecretKey(process.env.ACCOUNT_MNEMONIC);
+let myaccount = algosdk.mnemonicToSecretKey(
+  "marble bargain devote struggle black rain ticket meadow couple until soup catalog jar afraid helmet scare legal cinnamon profit craft proof tuna elegant absorb insect"
+);
 let sender = myaccount.addr;
 
 async function compileProgram(client, TealSource) {
@@ -28,14 +26,14 @@ async function compileProgram(client, TealSource) {
   try {
     const localInts = 0;
     const localBytes = 0;
-    const globalInts = 2;
+    const globalInts = 1;
     const globalBytes = 0;
 
-    const approvalProgramfile = await open(
-      "./contracts/artifacts/songvote_approval.teal"
+    let approvalProgramfile = await open(
+      "./contracts/artifacts/counter_approval.teal"
     );
-    const clearProgramfile = await open(
-      "./contracts/artifacts/songvote_clear.teal"
+    let clearProgramfile = await open(
+      "./contracts/artifacts/counter_clear.teal"
     );
 
     const approvalProgram = await approvalProgramfile.readFile();

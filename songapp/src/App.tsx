@@ -19,13 +19,13 @@ function App() {
     shouldShowSignTxnToast: true,
   });
 
-  const app_address = 166202264;
-  const baseServer = "https://testnet-algorand.api.purestake.io/ps2";
-  const port = "";
-  const token = {
-    "X-API-Key": "QSiMVqlcHn1uMl22I9MXK3bKrPlQLRD64A1Ux9hZ",
-  };
-  const algodClient = new algosdk.Algodv2(token, baseServer, port);
+  // CHANGE THIS TO YOUR APP ID
+  const app_address = 166226726;
+  // CHANGE THIS TO YOUR APP ID
+
+  const baseServer = "https://testnet-api.algonode.cloud";
+
+  const algodClient = new algosdk.Algodv2("", baseServer, "");
 
   const walletConnectStatus = () => {
     return !!currentAccount;

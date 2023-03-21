@@ -67,3 +67,5 @@ if __name__ == "__main__":
 
     with open(os.path.join(path, "counter_clear.teal"), 'w') as f:
         f.write(clear_state_program())
+
+

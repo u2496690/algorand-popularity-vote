@@ -10,19 +10,14 @@ async function readGlobalState(client, index) {
     console.log(applicationInfoResponse["params"]["global-state"][n]);
   }
 }
-
-let myaccount = algosdk.mnemonicToSecretKey(process.env.ACCOUNT_MNEMONIC);
+// Application ID
+let index = 166225643;
+//Make sure you change it to yours.
+let myaccount = algosdk.mnemonicToSecretKey("marble bargain devote struggle black rain ticket meadow couple until soup catalog jar afraid helmet scare legal cinnamon profit craft proof tuna elegant absorb insect");
 let sender = myaccount.addr;
 
-const baseServer = "https://testnet-algorand.api.purestake.io/ps2";
-const port = "";
-const token = {
-  "X-API-Key": process.env.API_KEY,
-};
-
-const algodClient = new algosdk.Algodv2(token, baseServer, port);
-
-let index = 166201775;
+const baseServer = "https://testnet-api.algonode.cloud";
+const algodClient = new algosdk.Algodv2("", baseServer, "");
 
 let appArgs1 = [];
 let add = "Add";

@@ -62,7 +62,7 @@ button:focus-visible {
 }
 
 body {
-  background: url('./jack-b-SxhNnU46jAc-unsplash.jpg');
+  background: url('../src/assets/jack-b-SxhNnU46jAc-unsplash.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   height:100vh;

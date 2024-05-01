@@ -1,9 +1,5 @@
 
-# Algorand popularity Vote Tutorial
-
-The present tutorial is designed to cater to the needs of programmers with varying degrees of proficiency, who aspire to engage in web3 development or Algorand chain development. A basic comprehension of javascript, python, and smart contracts would suffice as a prerequisite to engage with the content. The tutorial is structured in a manner that facilitates progressive learning, with the aim of enabling the participant to attain a comprehensive understanding of the Algorand development pipeline and successfully create a functional dapp.
-
-
+# Popularity Vote
 
 ## Usage
 
@@ -22,7 +18,7 @@ pip install -r requirements.txt
 
 - Run the first file to create an account.
 ```bash
-node scripts/1-create-account.js
+node scripts/create-account.js
 ```
 Make sure you saved the account data and open in in a wallet created on [Pera Wallet](https://web.perawallet.app/)
 
@@ -39,7 +35,7 @@ let myaccount = algosdk.mnemonicToSecretKey("your mnemonic");
 ```
 Then run the script.
 ```bash
-node scripts/5-deploy-popularityvote.js
+node scripts/deploy-contract.js
 ```
 
 - Start the front-end
@@ -63,13 +59,3 @@ Then start the dev server:
 ```bash
 npm run dev
 ```
-
-
-
-
-
-
-## Acknowledgements
-
- - [Antony Silvetti-Schmitt for the origial tutorial](https://github.com/Antony-SS?tab=repositories)
- - [Vite Templates](https://vitejs.dev/)

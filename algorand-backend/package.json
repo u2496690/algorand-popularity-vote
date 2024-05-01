@@ -1,8 +1,8 @@
 {
-  "name": "algorandsongvotebackendtemplate",
+  "name": "popularityvote",
   "type": "module",
   "version": "1.0.0",
-  "description": "The final template for the backend for Song Vote on Algorand",
+  "description": "The Popularity Vote on Algorand",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

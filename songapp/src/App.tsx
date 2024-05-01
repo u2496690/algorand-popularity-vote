@@ -20,7 +20,7 @@ function App() {
   });
 
   // CHANGE THIS TO YOUR APP ID
-  const app_address: number = YOUR_APP_ID;
+  const app_address: number = 655168198;
   // CHANGE THIS TO YOUR APP ID
 
   const baseServer = "https://testnet-api.algonode.cloud";
@@ -197,9 +197,9 @@ function App() {
   return (
     <div className="mainContainer">
       <div className="dataContainer">
-        <div className="header">🎧︎ What kind of music do you like?</div>
+        <div className="header">Who do you like more?</div>
         <div className="bio">
-          Vote for the better music genre. Ensure your wallet is set to the{" "}
+          Vote for your favourite person. Ensure your wallet is set to the{" "}
           <b>testnet</b>.
         </div>
         <div className="bio">Rules: Unlimited voting, get to clicking!</div>
@@ -229,16 +229,16 @@ function App() {
             )}
             {walletbalance > 0.01 && (
               <>
-                <div className="songs-container">
-                  <div className="song-card">
-                    <div className="title">EDM</div>
+                <div className="popularitys-container">
+                  <div className="popularity-card">
+                    <div className="title">Userone</div>
                     <div className="count">{Count1}</div>
                     <button className="mathButton" onClick={addC1}>
                       {voteState1}
                     </button>
                   </div>
-                  <div className="song-card">
-                    <div className="title">Pop</div>
+                  <div className="popularity-card">
+                    <div className="title">Usertwo</div>
                     <div className="count">{Count2}</div>
                     <button className="mathButton" onClick={addC2}>
                       {voteState2}

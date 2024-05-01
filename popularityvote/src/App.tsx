@@ -19,7 +19,7 @@ function App() {
     shouldShowSignTxnToast: true,
   });
 
-  const app_address: number = 655202693;
+  const app_address: number = 655233238;
   const baseServer = "https://testnet-api.algonode.cloud";
 
   const algodClient = new algosdk.Algodv2("", baseServer, "");
